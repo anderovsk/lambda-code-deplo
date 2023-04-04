@@ -1,25 +1,29 @@
-import boto3
+import json
 
 def lambda_handler(event, context):
-    # Configura o cliente SNS
-    sns = boto3.client('sns')
+    path = event['path']
+    http_method = event['httpMethod']
     
-    # Define o tópico SNS para enviar o e-mail
-    topic_arn = 'arn:aws:sns:us-east-1:755424459357:Test'
+    if path == '/funcao1' and http_method == 'GET':
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Esta é a função 1')
+        }
     
-    # Define o corpo do e-mail
-    subject = 'Teste de envio de e-mail via AWS Lambda'
-    message = 'Este é um e-mail de teste enviado por uma função Lambda da AWS.'
+    elif path == '/funcao2' and http_method == 'POST':
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Esta é a função 2')
+        }
     
-    # Envia a mensagem para o tópico SNS
-    sns.publish(
-        TopicArn=topic_arn,
-        Subject=subject,
-        Message=message
-    )
+    elif path == '/funcao3' and http_method == 'PUT':
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Esta é a função 3')
+        }
     
-    # Retorna uma mensagem de sucesso
-    return {
-        'statusCode': 200,
-        'body': 'E-mail enviado com sucesso!'
-    }
+    else:
+        return {
+            'statusCode': 404,
+            'body': json.dumps('Recurso não encontrado')
+        }
